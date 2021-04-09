@@ -12,4 +12,4 @@ require_once 'vendor/autoload.php';
 $requestBody = file_get_contents('php://input');
 $parsedBody = json_decode($requestBody, TRUE);
 
-echo "<pre>{$parsedBody}</pre>";
+exit("<pre>{$parsedBody}</pre>");
