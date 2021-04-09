@@ -9,16 +9,13 @@
   ],
   "env": {
     "CLIENT_ID": {
-      "description": "Clinet id из настроек приложения",
-      "value": "<configure me>"
+      "description": "Clinet id из настроек приложения"
     },
     "CLIENT_SECRET": {
-      "description": "client secret из настроек приложения",
-      "value": "<configure me>"
+      "description": "client secret из настроек приложения"
     },
     "SCOPES": {
-      "description": "Список скопов, через пробел",
-      "value": "<configure me>"
+      "description": "Список скопов, через пробел"
     }
   },
   "website": "https://developers.amo.tm/docs",
