@@ -1,0 +1,25 @@
+{
+  "name": "Small Sharp Tool",
+  "description": "This app does one little thing, and does it well.",
+  "keywords": [
+    "productivity",
+    "HTML5",
+    "scalpel"
+  ],
+  "env": {
+    "CLIENT_ID": {
+      "description": "Clinet id из настроек приложения",
+      "value": "<configure me>"
+    },
+    "CLIENT_SECRET": {
+      "description": "client secret из настроек приложения",
+      "value": "<configure me>"
+    },
+    "SCOPES": {
+      "description": "Список скопов, через пробел",
+      "value": "<configure me>"
+    }
+  },
+  "website": "https://developers.amo.tm/docs",
+  "repository": "https://github.com/amo-tm/tutorial"
+}
