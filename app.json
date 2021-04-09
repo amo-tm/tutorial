@@ -1,10 +1,11 @@
 {
-  "name": "Small Sharp Tool",
-  "description": "This app does one little thing, and does it well.",
+  "name": "AMO API. Демо 4",
+  "description": "Пример получения access token",
   "keywords": [
-    "productivity",
-    "HTML5",
-    "scalpel"
+    "amo",
+    "amo API",
+    "amo access token",
+    "amo oauth"
   ],
   "env": {
     "CLIENT_ID": {
