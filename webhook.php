@@ -29,9 +29,15 @@ $conversationIdentity = $parsedBody['_embedded']['conversation_identity'];
 
 // Подготовим запрос на ответ
 $answerBody = [
-    'text' => $message['text'],
-    'attachments' => $message['attachments']
 ];
+
+if ($messageText = $message['text'] ?? null) {
+    $answerBody['text'] = $messageText;
+}
+
+if ($attachments = $message['attachments'] ?? null) {
+    $answerBody['attachments'] = $attachments;
+}
 
 // Инициализируем провайдер
 $provider = new League\OAuth2\Client\Provider\GenericProvider([
