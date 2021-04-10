@@ -12,8 +12,8 @@ use League\OAuth2\Client\Provider\GenericProvider;
 require_once 'vendor/autoload.php';
 
 $appURL = "https://{$_SERVER['SERVER_NAME']}";
-$clientId = $_ENV['CLIENT_ID'] ?? null;
-$clientSecret = $_ENV['CLIENT_SECRET'] ?? null;
+$clientId = getenv('CLIENT_ID') ?? null;
+$clientSecret = getenv('CLIENT_SECRET') ?? null;
 
 $appName = str_replace( '.herokuapp.com', '', $_SERVER['SERVER_NAME']);
 $settingsURL = "https://dashboard.heroku.com/apps/{$appName}/settings";
