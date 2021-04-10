@@ -18,6 +18,11 @@
       "description": "Список скопов, через пробел"
     }
   },
+  "addons": [
+    {
+      "plan": "heroku-redis:hobby-dev"
+    }
+  ],
   "website": "https://developers.amo.tm/docs",
   "repository": "https://github.com/amo-tm/tutorial"
 }
