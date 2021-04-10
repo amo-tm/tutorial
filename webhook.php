@@ -55,6 +55,9 @@ $answerRequest = $provider->getAuthenticatedRequest(
     "https://api.amo.io/v1.3/direct/{$conversationIdentity['direct_id']}/sendMessage",
     $accessToken,
     [
+        'headers' => [
+            'content-type' => 'application/json'
+        ],
         'body' => json_encode($answerBody)
     ]
 );
