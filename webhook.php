@@ -28,7 +28,7 @@ $message = $parsedBody['_embedded']['message'];
 $conversationIdentity = $parsedBody['_embedded']['conversation_identity'];
 
 // Подготовим запрос на ответ
-$answerRequest = [
+$answerBody = [
     'text' => $message['text'],
     'attachments' => $message['attachments']
 ];
@@ -49,7 +49,7 @@ $answerRequest = $provider->getAuthenticatedRequest(
     "https://api.amo.io/v1.3/direct/{$conversationIdentity['direct_id']}/sendMessage",
     $accessToken,
     [
-        'body' => $answerRequest
+        'body' => $answerBody
     ]
 );
 
