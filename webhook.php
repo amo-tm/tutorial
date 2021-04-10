@@ -29,6 +29,10 @@ $conversationIdentity = $parsedBody['_embedded']['conversation_identity'];
 
 // Подготовим запрос на ответ
 $answerBody = [
+    'reply_to' => [
+        'conversation_identity' => $conversationIdentity,
+        'msg_id' => $message['id']
+    ]
 ];
 
 if ($messageText = $message['text'] ?? null) {
