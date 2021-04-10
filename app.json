@@ -1,6 +1,6 @@
 {
-  "name": "AMO API. Демо 4",
-  "description": "Пример получения access token",
+  "name": "Tutorial. Разработка директ бота",
+  "description": "Разработка директ бота",
   "keywords": [
     "amo",
     "amo API",
@@ -13,9 +13,6 @@
     },
     "CLIENT_SECRET": {
       "description": "client secret из настроек приложения"
-    },
-    "SCOPES": {
-      "description": "Список скопов, через пробел"
     }
   },
   "addons": [
