@@ -43,7 +43,7 @@ $provider = new League\OAuth2\Client\Provider\GenericProvider([
 // Отправим запрос
 $answerRequest = $provider->getAuthenticatedRequest(
     'POST',
-    "https://api.amo.io/v1.3/direct/${parsedBody['conversation_identity']['direct_id']}/sendMessage",
+    "https://api.amo.io/v1.3/direct/{$parsedBody['conversation_identity']['direct_id']}/sendMessage",
     $accessToken,
     [
         'body' => $answerRequest
