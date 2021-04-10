@@ -44,6 +44,9 @@ if (!isset($_GET['code'])) {
             'code' => $_GET['code']
         ]);
 
+        $redis = new Predis\Client(getenv('REDIS_URL'));
+        $redis->set("ACCESS_TOKEN", json_encode($accessToken->jsonSerialize()));
+
         // We have an access token, which we may use in authenticated
         // requests against the service provider's API.
         echo 'Access Token: ' . $accessToken->getToken() . "<br>";

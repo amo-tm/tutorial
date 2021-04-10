@@ -13,3 +13,8 @@ $requestBody = file_get_contents('php://input');
 $parsedBody = json_decode($requestBody, TRUE);
 
 file_put_contents("php://stderr", "{$requestBody}\n");
+
+$redis = new Predis\Client(getenv('REDIS_URL'));
+$accessTokenJson = $redis->get("ACCESS_TOKEN");
+
+file_put_contents("php://stderr", "AccessToken: {$accessTokenJson}\n");
