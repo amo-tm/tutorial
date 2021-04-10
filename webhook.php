@@ -24,10 +24,13 @@ $accessToken = new \League\OAuth2\Client\Token\AccessToken(
     json_decode($accessTokenJson, true)
 );
 
+$message = $parsedBody['_embedded']['message'];
+$conversationIdentity = $parsedBody['_embedded']['conversation_identity'];
+
 // Подготовим запрос на ответ
 $answerRequest = [
-    'text' => $parsedBody['text'],
-    'attachments' => $parsedBody['attachments']
+    'text' => $message['text'],
+    'attachments' => $message['attachments']
 ];
 
 // Инициализируем провайдер
@@ -43,7 +46,7 @@ $provider = new League\OAuth2\Client\Provider\GenericProvider([
 // Отправим запрос
 $answerRequest = $provider->getAuthenticatedRequest(
     'POST',
-    "https://api.amo.io/v1.3/direct/{$parsedBody['conversation_identity']['direct_id']}/sendMessage",
+    "https://api.amo.io/v1.3/direct/{$conversationIdentity['direct_id']}/sendMessage",
     $accessToken,
     [
         'body' => $answerRequest
