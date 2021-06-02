@@ -10,6 +10,7 @@
 use League\OAuth2\Client\Provider\GenericProvider;
 
 require_once 'vendor/autoload.php';
+require 'vendor/autoload.php';
 
 $appURL = "https://{$_SERVER['SERVER_NAME']}";
 $clientId = $_ENV['CLIENT_ID'] ?? null;
