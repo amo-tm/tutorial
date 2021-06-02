@@ -52,6 +52,12 @@ if (!isset($_GET['code'])) {
         echo 'Already expired? ' . ($accessToken->hasExpired() ? 'expired' : 'not expired') . "<br>";
         echo '<script>setTimeout(function(){window.close()}, 15 * 1000);</script>';
 
+        $client = new GuzzleHttp\Client(['base_uri' => 'http://id.dev.amo.tm/oauth2/validate']);
+        $headers = [ 'Authorization' => 'Bearer ' . $accessToken->getToken(), 'Accept' => 'application/json', ];
+        $response = $client->request('GET', 'validate', [ 'headers' => $headers ]);
+
+        echo $response->getBody();
+
     } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
 
         // Failed to get the access token or user details.
