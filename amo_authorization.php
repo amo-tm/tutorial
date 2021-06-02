@@ -33,11 +33,9 @@ $provider = new GenericProvider([
 ]);
 
 if (!isset($_GET['code'])) {
-
     exit('Invalid code');
 
 } else {
-
     try {
 
         // Try to get an access token using the authorization code grant.
@@ -53,7 +51,7 @@ if (!isset($_GET['code'])) {
         echo 'Already expired? ' . ($accessToken->hasExpired() ? 'expired' : 'not expired') . "<br>";
         echo '<script>setTimeout(function(){window.close()}, 15 * 1000);</script>';
 
-        $client = new GuzzleHttp\Client(['base_uri' => 'http://id.dev.amo.tm/oauth2/validate']);
+        $client = new GuzzleHttp\Client(['base_uri' => 'https://id.amo.tm/oauth2/validate']);
         $headers = [ 'Authorization' => 'Bearer ' . $accessToken->getToken(), 'Accept' => 'application/json', ];
         $response = $client->request('GET', 'validate', [ 'headers' => $headers ]);
 
