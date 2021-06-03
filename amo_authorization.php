@@ -32,9 +32,11 @@ $provider = new GenericProvider([
 ]);
 
 if (!isset($_GET['code'])) {
+
     exit('Invalid code');
 
 } else {
+
     try {
 
         // Try to get an access token using the authorization code grant.
@@ -42,7 +44,7 @@ if (!isset($_GET['code'])) {
             'code' => $_GET['code']
         ]);
 
-         // We have an access token, which we may use in authenticated
+        // We have an access token, which we may use in authenticated
         // requests against the service provider's API.
         $request = $provider->getAuthenticatedRequest(
             'GET',
