@@ -56,9 +56,9 @@ if (!isset($_GET['code'])) {
         $response = $client->request('GET', 'validate', [ 'headers' => $headers ]);
 
         $resp = json_decode($response->getBody());
-        echo 'User uuid: ' . $resp->{'user_uuid'} . "<br>";
-        echo 'Company uuid: ' . $resp->{'company_uuid'} . "<br>";
-        echo 'Client uuid: ' . $resp->{'client_uuid'} . "<br>";
+        echo 'User Id: ' . $resp->{'user_uuid'} . "<br>";
+        echo 'Company Id: ' . $resp->{'company_uuid'} . "<br>";
+        echo 'Client Id: ' . $resp->{'client_uuid'} . "<br>";
 
     } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
 
