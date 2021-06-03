@@ -10,7 +10,6 @@
 use League\OAuth2\Client\Provider\GenericProvider;
 
 require_once 'vendor/autoload.php';
-require 'vendor/autoload.php';
 
 $appURL = "https://{$_SERVER['SERVER_NAME']}";
 $clientId = $_ENV['CLIENT_ID'] ?? null;
@@ -43,22 +42,32 @@ if (!isset($_GET['code'])) {
             'code' => $_GET['code']
         ]);
 
-        // We have an access token, which we may use in authenticated
+         // We have an access token, which we may use in authenticated
         // requests against the service provider's API.
+        $request = $provider->getAuthenticatedRequest(
+            'GET',
+            "https://id.amo.tm/oauth2/validate",
+            $accessToken,
+            [
+                'headers' => [
+                    'Accept' => 'application/json'
+                ],
+            ]
+        );
+        
+        $client = new \GuzzleHttp\Client();
+        $response = $client->send($request);
+        $responseJson = json_decode($response->getBody());
+
         echo 'Access Token: ' . $accessToken->getToken() . "<br>";
         echo 'Refresh Token: ' . $accessToken->getRefreshToken() . "<br>";
         echo 'Expired in: ' . $accessToken->getExpires() . "<br>";
         echo 'Already expired? ' . ($accessToken->hasExpired() ? 'expired' : 'not expired') . "<br>";
+
+        echo 'User Id: ' . $responseJson->{'user_uuid'} . "<br>";
+        echo 'Company Id: ' . $responseJson->{'company_uuid'} . "<br>";
+        echo 'Client Id: ' . $responseJson->{'client_uuid'} . "<br>";
         echo '<script>setTimeout(function(){window.close()}, 15 * 1000);</script>';
-
-        $client = new GuzzleHttp\Client(['base_uri' => 'https://id.amo.tm/oauth2/validate']);
-        $headers = [ 'Authorization' => 'Bearer ' . $accessToken->getToken(), 'Accept' => 'application/json', ];
-        $response = $client->request('GET', 'validate', [ 'headers' => $headers ]);
-
-        $resp = json_decode($response->getBody());
-        echo 'User Id: ' . $resp->{'user_uuid'} . "<br>";
-        echo 'Company Id: ' . $resp->{'company_uuid'} . "<br>";
-        echo 'Client Id: ' . $resp->{'client_uuid'} . "<br>";
 
     } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
 
@@ -68,3 +77,9 @@ if (!isset($_GET['code'])) {
     }
 
 }
+
+
+
+
+
+
