@@ -22,8 +22,8 @@ use Ramsey\Uuid\Uuid;
 
 require_once 'vendor/autoload.php';
 
-$clientId = getenv('AMO_CLIENT_ID') ?? null;
-$clientSecret = getenv('AMO_CLIENT_SECRET') ?? null;
+$clientId = getenv('CLIENT_ID') ?? null;
+$clientSecret = getenv('CLIENT_SECRET') ?? null;
 
 $sdk = new AmoClient([
     'clientID' => $clientId,
