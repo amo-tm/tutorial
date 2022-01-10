@@ -26,7 +26,7 @@ $clientId = getenv('CLIENT_ID') ?? null;
 $clientSecret = getenv('CLIENT_SECRET') ?? null;
 
 $sdk = new AmoClient([
-    'clientID' => $clientId,
+    'clientId' => $clientId,
     'clientSecret' => $clientSecret,
 ]);
 
