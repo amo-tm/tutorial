@@ -1,6 +1,7 @@
 {
     "require": {
         "league/oauth2-client": "^2.6",
-        "predis/predis": "^1.1"
+        "predis/predis": "^1.1",
+        "amo-tm/amosdk-php": "dev-v1.0.0-BETA"
     }
 }
