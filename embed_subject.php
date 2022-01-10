@@ -76,31 +76,19 @@ $newSubject = $subjectService->create(new Subject([
 
 $subjectService = $teamService->subject($newSubject->getId());
 
+$htmlPath = realpath(__DIR__ . '/embed_subject/dist/index.html');
+$htmlContent = file_get_contents($htmlPath);
+
+$amoWscParams = [
+  'appId' => $clientId,
+  'teamId' => $newTeam->getId(),
+  'subjectId' => $newSubject->getId(),
+  'userId' => $createdProfile->getId(),
+  'userToken' => $subjectService->embedUserToken($createdProfile),
+];
+
+$htmlContent = str_replace("\"%AMO_WSC_PARAMS%\"", json_encode($amoWscParams), $htmlContent);
+
+echo $htmlContent
+
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <title>Test embeded chat</title>
-    <link rel="stylesheet" href="style.css" />
-    <script>
-        window.AMO_WSC_PARAMS = {
-            appId: '<?=$clientId?>',
-            teamId: '<?=$newTeam->getId()?>>',
-            subjectId: '<?=$newSubject->getId()?>',
-            userId: '<?=$createdProfile->getId()?>',
-            userToken: '<?=$subjectService->embedUserToken($createdProfile)?>',
-        }
-    </script>
-</head>
-<body>
-<div id="app"></div>
-<script type="module" src="index.jsx">
-    const app = document.getElementById('app');
-    ReactDOM.render(<App />, app);
-</script>
-</body>
-</html>
-
-
