@@ -8,7 +8,9 @@
  */
 
 use Amo\Sdk\AmoClient;
+use Amo\Sdk\Models\Profile;
 use Amo\Sdk\Models\Team;
+use Amo\Sdk\Models\TeamProps;
 
 require_once 'vendor/autoload.php';
 
@@ -25,6 +27,7 @@ $sdk = new AmoClient([
 $appScopedSdk = $sdk->withToken($sdk->getApplicationToken(['teams', 'profiles']));
 
 $teamID = $redis->get("T4_TEAM_ID");
+
 if (!$teamID) {
     // Создали команду
     $newTeam = $appScopedSdk->team()->create(new Team([
@@ -35,55 +38,44 @@ if (!$teamID) {
     $redis->set("T4_TEAM_ID", $teamID);
 }
 
-echo "TEAM ID: $teamID"
+// Для работы с командой нам понадобится токен команды
+$teamTokenJson = $redis->get("{$teamID}_TOKEN");
+if ($teamTokenJson) {
+    $teamToken = new \League\OAuth2\Client\Token\AccessToken(
+        json_decode($teamTokenJson, true)
+    );
+    $teamService = $sdk->withToken($teamToken)->team($teamID);
+} else {
+    // Токена нет в сторе, создадим новый
+    $teamService = $appScopedSdk->team($teamID)->scope();
+    $redis->set("{$teamID}_TOKEN", json_encode($teamService->getAccessToken()));
+}
 
-//$redis = new Predis\Client(getenv('REDIS_URL'));
+$profileID = $redis->get("T4_PROFILE_ID");
+
 //
-//$teamID = $redis->get("T4_TEAM_ID");
-//$profileID = $redis->get("T4_PROFILE_ID");
-//$subjectID = $redis->get("T4_SUBJECT_ID");
-//
-//$clientId = getenv('CLIENT_ID') ?? null;
-//$clientSecret = getenv('CLIENT_SECRET') ?? null;
-//
-//$sdk = new AmoClient([
-//    'clientId' => $clientId,
-//    'clientSecret' => $clientSecret,
-//]);
-//
-//$appScopedSdk = $sdk->withToken($sdk->getApplicationToken(['teams', 'profiles']));
-//
-//if (!$teamID) {
-//    // Создали команду
-//    $newTeam = $appScopedSdk->team()->create(new Team([
-//        'title' => 'testTeamName'
-//    ]));
-//
-//    $teamID = $newTeam->getId();
-//    $redis->set("T4_TEAM_ID", $teamID);
-//}
-//
-//if (!$profileID) {
-//    // Создали профиль
-//    $createdProfile = $appScopedSdk->profile()->create(new Profile([
-//        'name' => 'Tim',
-//        'email' => 'tim@example.com',
-//        'external_id' => Uuid::uuid4(),
-//    ]));
-//
-//    $teamService = $appScopedSdk->team($teamID)->scope();
-//
-//    $redis->set("{$teamID}_TOKEN", json_encode($teamService->getAccessToken()));
-//
-//    // Приглашаем профиль в команду
-//    $invitedUser = $teamService->invite($createdProfile->getId(), new TeamProps([
-//        'is_admin' => true,
-//        'position' => 'CEO'
-//    ]));
-//
-//    $profileID = $createdProfile->getId();
-//    $redis->set("T4_PROFILE_ID", $profileID);
-//}
+if (!$profileID) {
+    // Создали профиль
+    $createdProfile = $appScopedSdk->profile()->create(new Profile([
+        'name' => 'Tim',
+        'email' => 'tim@example.com',
+        'external_id' => Uuid::uuid4(),
+    ]));
+
+    // Приглашаем профиль в команду
+    $invitedUser = $teamService->invite($createdProfile->getId(), new TeamProps([
+        'is_admin' => true,
+        'position' => 'CEO'
+    ]));
+
+    $profileID = $createdProfile->getId();
+    $redis->set("T4_PROFILE_ID", $profileID);
+}
+
+echo "
+Team ID: $teamID\n
+Profile ID: $profileID
+"
 //
 //// Восстановим сервис для работы с командой
 //$teamTokenJson = $redis->get("{$teamID}_TOKEN");
