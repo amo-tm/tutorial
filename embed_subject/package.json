@@ -1,12 +1,14 @@
 {
-  "name": "embed-subject",
+  "name": "embed_subject",
   "version": "1.0.0",
-  "private": true,
+  "description": "",
   "scripts": {
-    "build": "parcel build src/index.html --public-url /embed_subject/dist"
+    "build": "rimraf dist/* && parcel build src/index.html --public-url /embed_subject/dist"
   },
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "@amo-tm/wsc": "^1.0.0",
-    "parcel": "^2.0.0"
+    "@amo-tm/wsc": "^1.0.x",
+    "parcel": "^2.1.1"
   }
 }
