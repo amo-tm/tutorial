@@ -80,10 +80,6 @@ if (!$profileID) {
     $redis->set("T4_PROFILE_ID", $profileID);
 }
 
-echo "
-Team ID: $teamID\n
-Profile ID: $profileID
-"
 //
 //// Восстановим сервис для работы с командой
 //$teamTokenJson = $redis->get("{$teamID}_TOKEN");
@@ -127,6 +123,14 @@ if (!$subjectID) {
     $subjectID = $newSubject->getId();
     $redis->set("T4_SUBJECT_ID", $subjectID);
 }
+
+echo "
+<pre>Team ID: $teamID
+Profile ID: $profileID
+Subject ID: $subjectID
+</pre>
+"
+
 //
 //
 //$subjectService = $teamService->subject();
