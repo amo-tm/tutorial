@@ -8,7 +8,14 @@
  */
 
 use Amo\Sdk\AmoClient;
+use Amo\Sdk\Models\Participant;
+use Amo\Sdk\Models\ParticipantCollection;
 use Amo\Sdk\Models\Profile;
+use Amo\Sdk\Models\Subject;
+use Amo\Sdk\Models\SubjectStatus;
+use Amo\Sdk\Models\SubjectStatusCollection;
+use Amo\Sdk\Models\SubjectThread;
+use Amo\Sdk\Models\SubjectThreadCollection;
 use Amo\Sdk\Models\Team;
 use Amo\Sdk\Models\TeamProps;
 use Ramsey\Uuid\Uuid;
@@ -91,29 +98,35 @@ Profile ID: $profileID
 //    $redis->set("{$teamID}_TOKEN", json_encode($teamService->getAccessToken()));
 //}
 //
-//if (!$subjectID) {
-//    $subjectService = $appScopedSdk->team($teamID)->scope()->subject();
-//    $newSubject = $subjectService->create(new Subject([
-//        'title' => 'A new patient request',
-//        'external_link' => 'https://example.com/',
-//        'author' => Participant::user($createdProfile),
-//        'participants' => new ParticipantCollection([
-//            Participant::user($createdProfile->getId()),
-//        ]),
-//        'subscribers' => new ParticipantCollection([
-//            Participant::user($createdProfile->getId()),
-//        ]),
-//        'threads' => new SubjectThreadCollection([
-//            new SubjectThread([
-//                'title' => 'Patient #100',
-//                'avatar_url' => 'https://picsum.photos/600'
-//            ]),
-//        ]),
-//        'status' => new SubjectStatusCollection([
-//            SubjectStatus::status('Заявка с сайта', '#F9F6EE'),
-//        ])
-//    ]));
-//}
+
+$subjectID = $redis->get("T4_SUBJECT_ID");
+
+if (!$subjectID) {
+    $subjectService = $teamService->subject();
+    $newSubject = $subjectService->create(new Subject([
+        'title' => 'A lead sample subject',
+        'external_link' => 'https://example.com/',
+        'author' => Participant::user($profileID),
+        'participants' => new ParticipantCollection([
+            Participant::user($profileID),
+        ]),
+        'subscribers' => new ParticipantCollection([
+            Participant::user($profileID),
+        ]),
+        'threads' => new SubjectThreadCollection([
+            new SubjectThread([
+                'title' => 'Patient #100',
+                'avatar_url' => 'https://picsum.photos/600'
+            ]),
+        ]),
+        'status' => new SubjectStatusCollection([
+            SubjectStatus::status('Unsorted', '#F9F6EE'),
+        ])
+    ]));
+
+    $subjectID = $newSubject->getId();
+    $redis->set("T4_SUBJECT_ID", $subjectID);
+}
 //
 //
 //$subjectService = $teamService->subject();
