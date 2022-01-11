@@ -11,6 +11,7 @@ use Amo\Sdk\AmoClient;
 use Amo\Sdk\Models\Profile;
 use Amo\Sdk\Models\Team;
 use Amo\Sdk\Models\TeamProps;
+use Ramsey\Uuid\Uuid;
 
 require_once 'vendor/autoload.php';
 
