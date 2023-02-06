@@ -11,7 +11,7 @@ use League\OAuth2\Client\Provider\GenericProvider;
 
 require_once 'vendor/autoload.php';
 
-$appURL = "https://{$_SERVER['SERVER_NAME']}";
+$appURL = "https://{$_SERVER['HTTP_HOST']}";
 $clientId = $_ENV['CLIENT_ID'] ?? null;
 $clientSecret = $_ENV['CLIENT_SECRET'] ?? null;
 
