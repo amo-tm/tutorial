@@ -15,9 +15,9 @@ $parsedBody = json_decode($requestBody, TRUE);
 
 logInfo("webhook from amo", $parsedBody);
 
-$companyUuid = $parsedBody['_embedded']['context']['company_id'];
+$companyId = $parsedBody['_embedded']['context']['company_id'];
 
-$accessToken = storeGetToken($companyUuid);
+$accessToken = storeGetToken($companyId);
 
 logInfo("use token", $accessToken->jsonSerialize());
 
@@ -67,4 +67,4 @@ $client = new \GuzzleHttp\Client();
 $response = $client->send($answerRequest);
 $responseJson = (string) $response->getBody();
 
-file_put_contents("php://stderr", "Answer response: {$responseJson}\n");
+logInfo("Answer response: {$responseJson}");
