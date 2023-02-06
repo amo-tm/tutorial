@@ -8,21 +8,18 @@
  */
 
 require_once 'vendor/autoload.php';
+require_once 'helpers.php';
 
 $requestBody = file_get_contents('php://input');
 $parsedBody = json_decode($requestBody, TRUE);
 
-file_put_contents("php://stderr", "{$requestBody}\n");
+logInfo("webhook from amo", $parsedBody);
 
-$redis = new Predis\Client(getenv('REDIS_URL'));
-$accessTokenJson = $redis->get("ACCESS_TOKEN");
+$companyUuid = $parsedBody['_embedded']['context']['company_id'];
 
-file_put_contents("php://stderr", "AccessToken: {$accessTokenJson}\n");
+$accessToken = storeGetToken($companyUuid);
 
-// Распарсим токен
-$accessToken = new \League\OAuth2\Client\Token\AccessToken(
-    json_decode($accessTokenJson, true)
-);
+logInfo("use token", $accessToken->jsonSerialize());
 
 $message = $parsedBody['_embedded']['message'];
 $conversationIdentity = $parsedBody['_embedded']['conversation_identity'];

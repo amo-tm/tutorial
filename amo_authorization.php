@@ -10,6 +10,7 @@
 use League\OAuth2\Client\Provider\GenericProvider;
 
 require_once 'vendor/autoload.php';
+require_once 'helpers.php';
 
 $appURL = "https://{$_SERVER['HTTP_HOST']}";
 $clientId = getenv('CLIENT_ID') ?? null;
@@ -70,7 +71,7 @@ if (!isset($_GET['code'])) {
         echo 'Company Id: ' . $responseJson->{'company_uuid'} . "<br>";
         echo 'Client Id: ' . $responseJson->{'client_uuid'} . "<br>";
 
-        file_put_contents('store/'.$responseJson->{'company_uuid'}.'.txt', json_encode($accessToken->jsonSerialize()));
+        storeAddToken($responseJson->{'company_uuid'}, $accessToken);
 
         echo '<script>setTimeout(function(){window.close()}, 15 * 1000);</script>';
 
