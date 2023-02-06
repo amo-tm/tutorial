@@ -1,6 +1,6 @@
 {
     "require": {
-        "league/oauth2-client": "^2.6",
-        "predis/predis": "^1.1"
+        "php": ">=7.4",
+        "league/oauth2-client": "^2.6"
     }
 }

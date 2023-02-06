@@ -11,7 +11,7 @@ use League\OAuth2\Client\Provider\GenericProvider;
 
 require_once 'vendor/autoload.php';
 
-$appURL = "https://{$_SERVER['SERVER_NAME']}";
+$appURL = "https://{$_SERVER['HTTP_HOST']}";
 $clientId = getenv('CLIENT_ID') ?? null;
 $clientSecret = getenv('CLIENT_SECRET') ?? null;
 
@@ -44,15 +44,34 @@ if (!isset($_GET['code'])) {
             'code' => $_GET['code']
         ]);
 
-        $redis = new Predis\Client(getenv('REDIS_URL'));
-        $redis->set("ACCESS_TOKEN", json_encode($accessToken->jsonSerialize()));
-
         // We have an access token, which we may use in authenticated
         // requests against the service provider's API.
+        $request = $provider->getAuthenticatedRequest(
+            'GET',
+            "https://id.amo.tm/oauth2/validate",
+            $accessToken,
+            [
+                'headers' => [
+                    'Accept' => 'application/json'
+                ],
+            ]
+        );
+
+        $client = new \GuzzleHttp\Client();
+        $response = $client->send($request);
+        $responseJson = json_decode($response->getBody());
+
         echo 'Access Token: ' . $accessToken->getToken() . "<br>";
         echo 'Refresh Token: ' . $accessToken->getRefreshToken() . "<br>";
         echo 'Expired in: ' . $accessToken->getExpires() . "<br>";
         echo 'Already expired? ' . ($accessToken->hasExpired() ? 'expired' : 'not expired') . "<br>";
+
+        echo 'User Id: ' . $responseJson->{'user_uuid'} . "<br>";
+        echo 'Company Id: ' . $responseJson->{'company_uuid'} . "<br>";
+        echo 'Client Id: ' . $responseJson->{'client_uuid'} . "<br>";
+
+        file_put_contents('store/'.$responseJson->{'company_uuid'}.'.txt', json_encode($accessToken->jsonSerialize()));
+
         echo '<script>setTimeout(function(){window.close()}, 15 * 1000);</script>';
 
     } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
