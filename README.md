@@ -29,3 +29,4 @@ ngrok http 8080
 
 4. Прописать в настройках приложения на портале https://developers.amo.tm 
    - OAuth redirect - [ngrok-domain]/amo_authorization.php
+   - Webhook URL - [ngrok-domain]/webhook.php
