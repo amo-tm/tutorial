@@ -13,15 +13,19 @@ use Tutorial\Config\Config;
 use Tutorial\Http\Controllers\SheetsController;
 use Tutorial\Http\Utils\Logger;
 use Tutorial\Repository\AccessTokenFileRepository;
+use Tutorial\Widgets\WidgetFactory;
 
 chdir(dirname(__DIR__));
 require_once 'vendor/autoload.php';
 //
+$logger = new Logger();
+$accessTokenRepository = new AccessTokenFileRepository('./store');
+$messengerService = ServiceApiClient::fromGlobals();
 $controller = new SheetsController(
     ServiceApiClient::fromGlobals(),
-    new AccessTokenFileRepository('./store'),
-    Config::fromGlobals(),
-    new Logger(),
+    $accessTokenRepository,
+    new WidgetFactory($accessTokenRepository, $messengerService, Config::fromGlobals(), $logger),
+    $logger,
 );
 
 $response = $controller(ServerRequest::fromGlobals());

@@ -9,17 +9,24 @@
 
 use AmoMessenger\ServiceApiClient;
 use GuzzleHttp\Psr7\ServerRequest;
+use Tutorial\Config\Config;
 use Tutorial\Http\Controllers\AuthorizationController;
 use Tutorial\Http\Controllers\WebhookController;
+use Tutorial\Http\Utils\Logger;
 use Tutorial\Repository\AccessTokenFileRepository;
+use Tutorial\Widgets\WidgetFactory;
 
 chdir(dirname(__DIR__));
 require_once 'vendor/autoload.php';
 //
+$logger = new Logger();
+$accessTokenRepository = new AccessTokenFileRepository('./store');
+$messengerService = ServiceApiClient::fromGlobals();
 $controller = new WebhookController(
-    ServiceApiClient::fromGlobals(),
-    new AccessTokenFileRepository('./store'),
-    new \Tutorial\Http\Utils\Logger(),
+    $messengerService,
+    $accessTokenRepository,
+    new WidgetFactory($accessTokenRepository, $messengerService, Config::fromGlobals(), $logger),
+    new Logger(),
 );
 
 $response = $controller(ServerRequest::fromGlobals());

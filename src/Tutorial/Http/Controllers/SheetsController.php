@@ -11,12 +11,13 @@ use Tutorial\Config\Config;
 use Tutorial\Repository\AccessTokenRepository;
 use Tutorial\Widgets\Example1\Example1WidgetController;
 use Tutorial\Widgets\WidgetController;
+use Tutorial\Widgets\WidgetFactory;
 
 class SheetsController
 {
     protected Service $messenger;
     protected AccessTokenRepository $accessTokenRepository;
-    protected Config $config;
+    protected WidgetFactory $widgetFactory;
     protected LoggerInterface $log;
 
     /**
@@ -25,13 +26,13 @@ class SheetsController
     public function __construct(
         Service $messenger,
         AccessTokenRepository $accessTokenRepository,
-        Config $config,
+        WidgetFactory $widgetFactory,
         LoggerInterface $log,
     )
     {
         $this->messenger = $messenger;
         $this->accessTokenRepository = $accessTokenRepository;
-        $this->config = $config;
+        $this->widgetFactory = $widgetFactory;
         $this->log = $log;
     }
 
@@ -40,16 +41,6 @@ class SheetsController
         $sheetsParams = $this->messenger->decodeSheetsRequest($request);
         $this->log->info('sheets request', ['data' => $sheetsParams]);
 
-        return $this->widget($sheetsParams['widget_id'])->render($sheetsParams);
-    }
-
-    private function widget(string $widgetId): WidgetController
-    {
-        switch ($widgetId) {
-            case $this->config->getWidgetExample1Id():
-                return new Example1WidgetController();
-            default:
-                throw new \Exception('unsupported widget');
-        }
+        return $this->widgetFactory->build($sheetsParams['widget_id'])->render($sheetsParams);
     }
 }

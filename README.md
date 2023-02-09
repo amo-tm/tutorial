@@ -1,31 +1,64 @@
 ### Примеры интеграции с amo | корпоративный мессенджер
 
-Материал к документации http://developers.amo.tm/docs/
+## Функциональность
 
-## Туториалы
-- Быстрый старт - https://github.com/amo-tm/tutorial/tree/bootstrap
-- Разработка директ-бота - https://github.com/amo-tm/tutorial/tree/tutorial-1
-- Встраивание чата в собственный продукт (closed beta) - https://github.com/amo-tm/tutorial/tree/tutorial-4
+- Бот в директах. Отвечает зеркальным сообщением
+- Возможность приглашать бота в канал. Отвечает зеркальным сообщением
+- Виджет в конструкте ботов. 
+  - Сохраняет выбранное поле в inputValues через SDK
+  - Отвечает пользователю в заявке. Обрабатывает несколько команд:
+    - Выводит список пользователей в команде
+    - Завершает работу виджета успешно
+    - Завершает работу виджета с ошибкой
 
-## Тестирование
+## Требования:
+   
+- PHP >= 8.0
+- Composer
+- Права на запись в директорию ./store в корне проекта
+- Настроенное приложение на портале разработчика amo (https://developers.amo.tm)
+- HTTPS, например через ngrok
+
+## Настройка приложения на портале разработчика
+
+1. Прописать в настройки OAuth авторизации Redirect URL `https://your.host/amo_authorization.php`. 
+2. Отметить скопы: `users:r`, `bot:direct`, `bot:team-tab`, `bot:channels`, `bot:w`.
+
+![](.md/developers-oauth.png)
+
+3. Прописать в настройках Webhooks Webhook URL `https://your.host/webhook.php`
+4. Отметить событие `messages`.
+
+![](.md/developers-webhooks.png)
+
+5. Прописать в настройках Виджетов URL для интерфейса виджетов `https://your.host/sheets.php`
+
+![](.md/developers-sheets.png)
+
+6. Создать новый виджет с любым именем
+7. Прописать коды возврата `success`, `error`
+
+![](.md/developers-sheets-widget.png)
+
+## Запуск примера
 
 1. Установить зависимости
 
 ```shell
-composer install -o 
+composer install -o
 ```
 
-2. На портале разработчика https://developers.amo.tm создать приложение и прописать в ENV переменные CLIENT_ID, CLIENT_SECRET
+2. Запустить через build-in сервер PHP, передав переменные окружения:
+   - `AMO_CLIENT_ID` - ID приложения
+   - `AMO_CLIENT_SECRET` - Секрет приложения
+   - `TUTORIAL_WIDGET_EXAMPLE_1_ID` - ID виджета
 
 ```shell
-CLIENT_ID='your app id' CLIENT_SECRET='your app secret' php -S 127.0.0.1:8080 -t .
+TUTORIAL_WIDGET_EXAMPLE_1_ID=your_widget_id AMO_CLIENT_ID=your_client_id AMO_CLIENT_SECRET=your_client_secret php -S 0.0.0.0:8080 -t public/
 ```
 
-3. Запустить ngrok
+4. Запустить ngrok
 
 ```shell
 ngrok http 8080
 ```
-
-4. Прописать в настройках приложения на портале https://developers.amo.tm 
-   - OAuth redirect - [ngrok-domain]/amo_authorization.php

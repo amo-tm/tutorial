@@ -12,4 +12,7 @@ interface Service
     public function resourceOwner(AccessToken $accessToken): array;
     public function sendMessage(AccessToken $accessToken, array $messageParams): array;
     public function decodeSheetsRequest(ServerRequestInterface $request): array;
+    public function rpaRequestSendMessage(AccessToken $accessToken, string $botId, string $requestId, array $messageParams): array;
+    public function users(AccessToken $accessToken): array;
+    public function rpaRequestReturnControl(AccessToken $accessToken, string $botId, string $requestId, string $returnCode): void;
 }
