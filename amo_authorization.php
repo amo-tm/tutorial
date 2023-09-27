@@ -10,6 +10,7 @@
 use League\OAuth2\Client\Provider\GenericProvider;
 
 require_once 'vendor/autoload.php';
+require 'vendor/autoload.php';
 
 $appURL = "https://{$_SERVER['HTTP_HOST']}";
 $clientId = $_ENV['CLIENT_ID'] ?? null;
@@ -32,11 +33,9 @@ $provider = new GenericProvider([
 ]);
 
 if (!isset($_GET['code'])) {
-
     exit('Invalid code');
 
 } else {
-
     try {
 
         // Try to get an access token using the authorization code grant.
@@ -51,6 +50,15 @@ if (!isset($_GET['code'])) {
         echo 'Expired in: ' . $accessToken->getExpires() . "<br>";
         echo 'Already expired? ' . ($accessToken->hasExpired() ? 'expired' : 'not expired') . "<br>";
         echo '<script>setTimeout(function(){window.close()}, 15 * 1000);</script>';
+
+        $client = new GuzzleHttp\Client(['base_uri' => 'https://id.amo.tm/oauth2/validate']);
+        $headers = [ 'Authorization' => 'Bearer ' . $accessToken->getToken(), 'Accept' => 'application/json', ];
+        $response = $client->request('GET', 'validate', [ 'headers' => $headers ]);
+
+        $resp = json_decode($response->getBody());
+        echo 'user uuid: ' . $resp->{'user_uuid'} . "<br>";
+        echo 'company uuid: ' . $resp->{'company_uuid'} . "<br>";
+        echo 'client uuid: ' . $resp->{'client_uuid'} . "<br>";
 
     } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
 
