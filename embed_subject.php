@@ -20,21 +20,24 @@ use Amo\Sdk\Models\Team;
 use Amo\Sdk\Models\TeamProps;
 use Ramsey\Uuid\Uuid;
 
-require_once 'vendor/autoload.php';
+require_once 'common.php';
 
-$redis = new Predis\Client(getenv('REDIS_URL'));
-
-$clientId = getenv('CLIENT_ID') ?? null;
-$clientSecret = getenv('CLIENT_SECRET') ?? null;
+$clientId = getenv('CLIENT_ID') ?: null;
+$clientSecret = getenv('CLIENT_SECRET') ?: null;
+$baseURL = getenv('AMO_BASE_URL') ?: 'https://api.amo.io';
+$authURL = getenv('AMO_AUTH_URL') ?: 'https://id.amo.tm';
+$wscURL = getenv('AMO_WSC_URL') ?: 'https://web.amo.tm';
 
 $sdk = new AmoClient([
     'clientId' => $clientId,
     'clientSecret' => $clientSecret,
+    'baseURL' => $baseURL,
+    'authURL' => $authURL
 ]);
 
 $appScopedSdk = $sdk->withToken($sdk->getApplicationToken(['teams', 'profiles']));
 
-$teamID = $redis->get("T4_TEAM_ID");
+$teamID = get('T4_TEAM_ID');
 
 if (!$teamID) {
     // Создали команду
@@ -43,11 +46,11 @@ if (!$teamID) {
     ]));
 
     $teamID = $newTeam->getId();
-    $redis->set("T4_TEAM_ID", $teamID);
+    set("T4_TEAM_ID", $teamID);
 }
 
 // Для работы с командой нам понадобится токен команды
-$teamTokenJson = $redis->get("{$teamID}_TOKEN");
+$teamTokenJson = getToken("{$teamID}_TOKEN");
 if ($teamTokenJson) {
     $teamToken = new \League\OAuth2\Client\Token\AccessToken(
         json_decode($teamTokenJson, true)
@@ -55,11 +58,12 @@ if ($teamTokenJson) {
     $teamService = $sdk->withToken($teamToken)->team($teamID);
 } else {
     // Токена нет в сторе, создадим новый
+//    print_r($appScopedSdk->getAccessToken()); die();
     $teamService = $appScopedSdk->team($teamID)->scope();
-    $redis->set("{$teamID}_TOKEN", json_encode($teamService->getAccessToken()));
+    setToken($teamID, $teamService->getAccessToken());
 }
 
-$profileID = $redis->get("T4_PROFILE_ID");
+$profileID = get("T4_PROFILE_ID");
 
 //
 if (!$profileID) {
@@ -77,7 +81,7 @@ if (!$profileID) {
     ]));
 
     $profileID = $createdProfile->getId();
-    $redis->set("T4_PROFILE_ID", $profileID);
+    set("T4_PROFILE_ID", $profileID);
 }
 
 //
@@ -95,7 +99,7 @@ if (!$profileID) {
 //}
 //
 
-$subjectID = $redis->get("T4_SUBJECT_ID");
+$subjectID = get("T4_SUBJECT_ID");
 
 if (!$subjectID) {
     $subjectService = $teamService->subject();
@@ -121,7 +125,7 @@ if (!$subjectID) {
     ]));
 
     $subjectID = $newSubject->getId();
-    $redis->set("T4_SUBJECT_ID", $subjectID);
+    set("T4_SUBJECT_ID", $subjectID);
 }
 
 $subjectService = $teamService->subject($subjectID);
@@ -138,5 +142,6 @@ $amoWscParams = [
 ];
 
 $htmlContent = str_replace("\"%AMO_WSC_PARAMS%\"", json_encode($amoWscParams), $htmlContent);
+$htmlContent = str_replace("%AMO_WSC_URL%", $wscURL, $htmlContent);
 
 echo $htmlContent;

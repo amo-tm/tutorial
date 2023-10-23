@@ -11,7 +11,7 @@ use League\OAuth2\Client\Provider\GenericProvider;
 
 require_once 'vendor/autoload.php';
 
-$appURL = "https://{$_SERVER['SERVER_NAME']}";
+$appURL = "https://{$_SERVER['HTTP_HOST']}";
 $clientId = getenv('CLIENT_ID') ?? null;
 $clientSecret = getenv('CLIENT_SECRET') ?? null;
 
@@ -26,8 +26,8 @@ $provider = new GenericProvider([
     'clientId'                 => $clientId,    // The client ID assigned to you by the provider
     'clientSecret'             => $clientSecret,    // The client password assigned to you by the provider
     'redirectUri'              => "{$appURL}/amo_authorization.php",
-    'urlAuthorize'             => 'https://id.amo.tm/access',
-    'urlAccessToken'           => 'https://id.amo.tm/oauth2/access_token',
+    'urlAuthorize'             => 'https://id.dev.amo.tm/access',
+    'urlAccessToken'           => 'https://id.dev.amo.tm/oauth2/access_token',
     'urlResourceOwnerDetails'  => null
 ]);
 

@@ -1,1 +1,6 @@
 vendor
+composer.phar
+.idea
+store/
+!store/.gitkeep
+.env

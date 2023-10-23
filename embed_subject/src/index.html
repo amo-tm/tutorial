@@ -6,6 +6,13 @@
   </head>
   <body>
     <script>
+      if (!window.AmoJsSdk) {
+        window.AmoJsSdk = {};
+      }
+      if (!window.AmoJsSdk.config) {
+        window.AmoJsSdk.config = {};
+      }
+      window.AmoJsSdk.config.wscUrl = "%AMO_WSC_URL%";
       window.AMO_WSC_PARAMS = "%AMO_WSC_PARAMS%";
     </script>
     <div>
