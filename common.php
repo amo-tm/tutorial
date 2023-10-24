@@ -7,7 +7,7 @@ use League\OAuth2\Client\Token\AccessToken;
 require_once 'vendor/autoload.php';
 
 $dotenv = Dotenv\Dotenv::createUnsafeImmutable(__DIR__);
-$dotenv->load();
+$dotenv->safeLoad();
 $dotenv->required(['CLIENT_ID', 'CLIENT_SECRET'])->notEmpty();
 
 function setToken(string $teamID, AccessToken $token) {
